@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+    <group android:checkableBehavior="single">
+
+        <item
+
+            android:id="@+id/nav_first"
+
+            android:checked="true"
+
+            android:title="Weather now"
+            android:visible="true" />
+
+
+        <item
+
+            android:id="@+id/nav_second"
+
+            android:title="Weather forecast"
+            android:visible="true" />
+
+        <item
+
+            android:id="@+id/nav_third"
+
+            android:title="Weather map" />
+
+        <item
+
+            android:id="@+id/nav_fourth"
+
+            android:title="Info" />
+
+
+
+    </group>
+
+
+
+</menu>
