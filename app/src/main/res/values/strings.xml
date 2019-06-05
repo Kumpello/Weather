@@ -2,4 +2,11 @@
     <string name="app_name">Weather</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="low_temp">Lowest Temperature</string>
+    <string name="temp">Temperature</string>
+    <string name="high_temp">Highest Temperature</string>
+    <string name="pressure">Pressure</string>
+    <string name="humidity">Humidity</string>
+    <string name="clouds">Clouds</string>
+    <string name="wind">Wind</string>
 </resources>

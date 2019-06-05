@@ -23,6 +23,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="alpha version xD" />
+        android:text="0.1" />
 
 </LinearLayout>
