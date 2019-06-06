@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.weather.models.WeatherMain;
+import com.example.weather.models.WeatherShortForecast;
 import com.example.weather.network.WeatherAPI;
 
 import retrofit2.Call;
@@ -30,11 +31,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private String city;
 
     TextView cityTextView;
-    TextView lowestTemp;
-    TextView temp;
-    TextView highestTemp;
-    ImageView background, arrow;
-    TextView pressure, humidity, clouds, wind;
+    TextView lowestTemp,lowestTempF;
+    TextView temp,tempF;
+    TextView highestTemp,highestTempF;
+    ImageView background, arrow,arrowF;
+    TextView pressure, humidity, clouds, wind,pressureF, humidityF, cloudsF, windF;
     TextView textView;
     LocationManager locationManager;
 
@@ -130,6 +131,21 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         arrow.setRotation(360 - response.body().wind.deg);
     }
 
+    public void setWeatherF(Response<WeatherShortForecast> response){
+        lowestTempF.setText(getString(R.string.low_temp)+":\n" + String.valueOf(response.body().list.get(0).main.temp_min) + " \u2103");
+        tempF.setText(getString(R.string.temp)+":\n" + String.valueOf(response.body().list.get(0).main.temp) + " \u2103");
+        highestTempF.setText(getString(R.string.high_temp)+":\n" + String.valueOf(response.body().list.get(0).main.temp_max) + " \u2103");
+        pressureF.setText(getString(R.string.pressure)+":\n" + response.body().list.get(0).main.pressure + " hPa");
+        humidityF.setText(getString(R.string.humidity)+":\n" + response.body().list.get(0).main.humidity + "%");
+        cloudsF.setText(getString(R.string.clouds)+":\n" + response.body().list.get(0).clouds.all + "%");
+        windF.setText(getString(R.string.wind)+":\n" + String.valueOf(response.body().list.get(0).wind.speed) + " m/s");
+
+        arrowF.setPivotX(arrow.getWidth() / 2);
+        arrowF.setPivotY(arrow.getHeight() / 2);
+        arrowF.setRotation(360 - response.body().list.get(0).wind.deg);
+    }
+
+
     public void findWeather(View view) {
         city = cityTextView.getText().toString();
 
@@ -143,6 +159,21 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onFailure(Call<WeatherMain> call, Throwable t) {
+                Toast.makeText(getActivity().getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+                t.printStackTrace();
+            }
+        });
+
+        WeatherAPI.getInstance().getWeatherForecast(city, "metric", API_KEY).enqueue(new Callback<WeatherShortForecast>() {
+            @Override
+            public void onResponse(Call<WeatherShortForecast> call, Response<WeatherShortForecast> response) {
+                setWeatherF(response);
+
+                Toast.makeText(getActivity().getApplicationContext(), String.valueOf(response.code()), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Call<WeatherShortForecast> call, Throwable t) {
                 Toast.makeText(getActivity().getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
                 t.printStackTrace();
             }
@@ -180,11 +211,24 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 t.printStackTrace();
             }
         });
+        WeatherAPI.getInstance().getWeatherFoecastbyGPS(String.valueOf(latitude), String.valueOf(longitude),"metric", API_KEY).enqueue(new Callback<WeatherShortForecast>() {
+            @Override
+            public void onResponse(Call<WeatherShortForecast> call, Response<WeatherShortForecast> response) {
+                setWeatherF(response);
+
+                Toast.makeText(getActivity().getApplicationContext(), String.valueOf(response.code()), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Call<WeatherShortForecast> call, Throwable t) {
+                Toast.makeText(getActivity().getApplicationContext(), "Error getting position", Toast.LENGTH_LONG).show();
+                t.printStackTrace();
+            }
+        });
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.main, container, false);
 
@@ -199,6 +243,15 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         clouds = view.findViewById(R.id.clouds);
         wind = view.findViewById(R.id.wind);
         arrow = view.findViewById(R.id.arrow);
+
+        lowestTempF = view.findViewById(R.id.lowestTempF);
+        tempF = view.findViewById(R.id.tempF);
+        highestTempF = view.findViewById(R.id.highestTempF);
+        pressureF = view.findViewById(R.id.pressureF);
+        humidityF = view.findViewById(R.id.humidityF);
+        cloudsF = view.findViewById(R.id.cloudsF);
+        windF = view.findViewById(R.id.windF);
+        arrowF = view.findViewById(R.id.arrowF);
 
         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.INTERNET}, 420);
 
